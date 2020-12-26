@@ -1,5 +1,4 @@
 const path = require('path');
-const nodeExternals = require('webpack-node-externals');
 
 const babelConf = {
     'presets': [
@@ -16,21 +15,20 @@ const babelConf = {
 
 module.exports = {
     'entry': './src/index',
-    mode: process.env.NODE_ENV,
+    mode: 'development',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: './index.js'
     },
-    externals: [nodeExternals()],
     target: 'node',
     resolve: {
         'mainFiles': ['index'],
-        'extensions': ['.js', '.ts']
+        'extensions': ['.js', '.ts', '.tsx', '.jsx']
     },
     module: {
         rules: [
             {
-                test: /\.ts$/,
+                test: /\.ts(x?)$/,
                 exclude: /node_modules/,
                 use: [
                     {
@@ -49,6 +47,17 @@ module.exports = {
                         options: babelConf
                     }
                 ]
+            },
+            {
+                test: /\.scss$/i,
+                use: [
+                    // Creates `style` nodes from JS strings
+                    'style-loader',
+                    // Translates CSS into CommonJS
+                    'css-loader',
+                    // Compiles Sass to CSS
+                    'sass-loader',
+                ],
             }
         ]
     }
